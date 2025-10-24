@@ -2,13 +2,15 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
 const bodyparser = require("body-parser");
+const users=require("./users.json")
 app.use(cors());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use(express.static(__dirname + "/public"));
 
-const checklist=[authenticate,authorize1]
+const checklist = [authenticate, authorize1];
 //  /=>endpoint, route
 //endpoint => data ni istey?
 //route => page ni iste?
@@ -38,6 +40,15 @@ app.get(
     res.json({ a: "hello" });
   }
 );
+app.post("/login", function (req, res,next) {
+  console.log(req.body);
+  let token = jwt.sign(req.body, "jwtAuthentication");
+  console.log(token);
+  res.json({token});
+  console.log(typeof token);
+  next()
+  // res.send("added user info");
+});
 
 app.post("/postTodo", (req, res) => {
   // console.log(req.body);
@@ -78,7 +89,7 @@ function authorize1(req, res, next) {
   next();
 }
 
-app.get("/getMovieById/:m1",checklist, (req, res) => {
+app.get("/getMovieById/:m1", checklist, (req, res) => {
   res.send("idigo thesuko");
 });
 
